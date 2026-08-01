@@ -1,0 +1,9 @@
+venv/
+__pycache__/
+.ipynb_checkpoints/
+.vscode/
+
+.env
+*.db
+*.pyc
+training/project/

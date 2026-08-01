@@ -1,0 +1,19 @@
+CREATE DATABASE IF NOT EXISTS raitha_bandava;
+
+USE raitha_bandava;
+
+CREATE TABLE IF NOT EXISTS users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+SHOW TABLES;
+
+SELECT * FROM users;
+
+
+ALTER TABLE users
+DROP COLUMN email;
+DESCRIBE users;

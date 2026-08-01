@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>Raitha Bandhava</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='photo.png') }}"
+    
+</head>
+<body>
+
+   <div class="starting">
+     <img src="{{url_for('static',filename='photo.png')}}" class="logo" ></img>
+     <h4 id="siteTitle">Raitha<br> Bandhava</h4>
+     <button id="loginBtn" class="loginBtn">Login</button>
+     <button id="signupBtn" class="signup">Sign Up</button>
+     <button class="lang" id="langBtn">Eng/ಕನ್ನಡ</button>
+     <div id="userSection"  style="display:none;"> 
+        <span id="userName" class="userName"></span> 
+        <button id="logoutBtn" class="logoutBtn"> Logout </button>
+      </div>
+   </div>
+   
+       <div class="main_img">
+          
+          <h1 id="main_heading">RAITA BANDHAVA</h1>
+          <p id="main_para">Empowering Karnataka's Farmers with Modern Knowledge</p>
+       </div>
+
+       <div class="categories">
+            <div class="section"  id="loan" >
+               <img src="{{url_for('static',filename='photo1.png')}}">
+               <h6 id="services">Services and Schemes</h6>
+               <p id="intro">Learn about government benefits through easy videos.</p>
+               
+            </div> 
+
+            <div class="section"  id="crop_cal">
+               <img src="{{url_for('static',filename='photo2.png')}}" alt="calendar">
+               <h6 id="calendar">Crop Calendar</h6>
+               <p id="cal_intro">Get recommendations based on your soil and district.</p>
+            </div>
+
+            <div class="section"  id="hybrid">
+               <img src="{{url_for('static',filename='photo3.png')}}">
+               <h6 id="smart">Smart Farming</h6>
+               <p id="smat_intro">New techniques to increase your yield and profit.</p>
+            </div>
+
+            <div class="section"   id="detector">
+               <img src="{{url_for('static',filename='photo4.png')}}">
+               <h6 id="disease">Disease Detector</h6>
+               <p id="dis_intro">Scan your crop to identify diseases instantly.</p>
+            </div>
+
+        </div>
+   
+ <!-- LOGIN MODAL --> 
+<div id="loginModal" class="modal"> 
+   <div class="modal-content"> 
+      <h2>Login</h2> 
+      <input type="text" id="login_name" placeholder="Username" > 
+      <input type="password" id="loginPassword" placeholder="Password" > 
+      <button onclick="loginUser()"> Login </button> 
+      <button onclick="closeLogin()"> Close </button> 
+   </div> 
+</div> 
+<!-- SIGNUP MODAL --> 
+   <div id="signupModal" class="modal"> 
+      <div class="modal-content"> 
+         <h2>Sign Up</h2> 
+         <input type="text" id="signupName" placeholder="Full Name" > 
+         <input type="password" id="signupPassword" placeholder="Password" > 
+         <button onclick="registerUser()"> Register </button> 
+         <button onclick="closeSignup()"> Close </button> 
+      </div> 
+   </div>    
+    
+   <a href="{{ url_for('chatbot') }}" class="chatbot-link">
+
+     <div class="chatbot" id="chatbot">
+
+         <span class="chatbot-icon">🤖</span>
+
+         <span id="chatbotText">
+             Ask your query here...
+         </span>
+
+    </div>
+
+   </a>
+ <script src="{{url_for('static',filename='script.js')}}"></script>
+</body>
+</html>

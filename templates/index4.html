@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style4.css') }}">
+<title>Diease Detector</title>
+<link rel="icon" type="image/png" href="{{url_for('static', filename='photo4.png')}}">
+</head>   
+<body>
+     <form action="/action"></form>
+
+     <div>
+       <button class="lang" id="langBtn">Eng / ಕನ್ನಡ</button>
+     </div>
+
+     <div class="main">
+        <div class="section">
+            <img src="{{url_for('static',filename='photo4.png')}}">
+            <h3 id="DiseaseHeading">Diesease Detector</h3>      
+        </div> 
+
+        <div class="container">
+            <video id="camera" autoplay playsinline></video>
+            <img id="previewImage" style="display:none; width:100%; border-radius:10px;">
+
+
+
+    <div class="btn-group">
+
+        <button id="captureBtn" class="captureBtn" onclick="capture()">
+             Capture
+        </button>
+
+        <label for="imageInput" class="uploadBtn" id="uploadBtn">
+            Upload image
+        </label>
+
+        <input
+            type="file"
+            id="imageInput"
+            accept="image/*"
+            onchange="predictUploadedImage()"
+            hidden
+        >
+
+    </div>
+    <div id="resultSection" class="resultSec" style="display: none;">
+        <h2>Prediction</h2>
+
+        <div id="result"></div>
+
+        <button id="listenBtn" onclick="speak()" style="display:none;" class="listenBtn">
+            Listen here
+        </button>
+    </div>
+
+</div>
+
+<script src="{{url_for('static',filename='script.js')}}"></script>
+</body>
+</html>

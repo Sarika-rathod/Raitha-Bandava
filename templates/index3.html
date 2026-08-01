@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style3.css') }}">
+    <title>Smart Farming</title>
+    <link rel="icon" type="image/png" href="{{url_for('static', filename='photo3.png')}}">
+</head>
+<body>
+     <form action="/action"></form>
+    <div>
+    <button class="lang" id="langBtn">Eng / ಕನ್ನಡ</button>
+    </div>
+   
+    <div class="main">
+      <div class="section">
+         <img src="{{url_for('static',filename='photo3.png')}}">
+         <h3 id="SmartHeading">Smart Farming</h3>      
+      </div> 
+     <div class="smart_video">
+         <ul class="list" id="smart_videoList">
+              <li>Precision Farming</li>
+             <li>AI Smart Irrigation</li>
+             <li>Vertical Farming </li>
+             <li>Agolla Cultivation</li>
+             <li>Hydroponics and Aquaponics</li>
+             <li>Mushroom Cultivation</li>            
+          </ul>
+     </div>
+    </div>
+
+ <div id="videoModal" class="video-modal">
+
+    <div class="video-container">
+
+      <span class="close-video">&times;</span>
+
+      <video id="popupVideo" controls autoplay>
+        <source id="popupSource" src="" type="video/mp4">
+      </video>
+
+    </div>
+
+ </div>
+ <script src="{{url_for('static',filename='script.js')}}"></script>
+</body>
+</html>

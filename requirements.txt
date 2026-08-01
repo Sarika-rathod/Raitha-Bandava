@@ -1,0 +1,7 @@
+Flask
+mysql-connector-python
+Werkzeug
+tensorflow==2.15.0
+Pillow
+numpy
+matplotlib
