@@ -7,6 +7,7 @@ from PIL import Image
 import tensorflow as tf
 import numpy as np
 import json
+import sqlite3
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -146,14 +147,7 @@ print("Step 4: Flask app created")
 
 def get_db_connection():
 
-conn = mysql.connector.connect(
-    host=os.getenv("DB_HOST"),
-    port=int(os.getenv("DB_PORT", 3306)),
-    user=os.getenv("DB_USER"),
-    password=os.getenv("DB_PASSWORD"),
-    database=os.getenv("DB_NAME")
-)
-
+conn = sqlite3.connect("raitha_bandava.db")
 
 
 def test_database():
