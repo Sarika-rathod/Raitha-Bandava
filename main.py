@@ -116,7 +116,6 @@ from werkzeug.security import (
 )
 from agno.agent import Agent
 from agno.models.groq import Groq
-from agno.tools.duckduckgo import DuckDuckGoTools
 from agno.db.sqlite import SqliteDb
 
 memory_db = SqliteDb(
