@@ -1,18 +1,18 @@
 from flask import Flask, render_template, request, jsonify
-import mysql.connector
 import os
-from tensorflow.keras.models import load_model
-from tensorflow.keras.utils import img_to_array
-from PIL import Image
-import tensorflow as tf
-import numpy as np
-import json
 import sqlite3
+import json
+import numpy as np
+import tensorflow as tf
 
+from PIL import Image
 from dotenv import load_dotenv
-load_dotenv()
+from tensorflow.keras.utils import img_to_array
+from werkzeug.security import generate_password_hash, check_password_hash
 
 from model_architecture import create_model
+
+load_dotenv()
 
 CLASS_NAMES = [
     "Maize_Common_Rust",
@@ -30,10 +30,7 @@ CLASS_NAMES = [
 ]
 
 model = create_model(len(CLASS_NAMES))
-
 model.load_weights("training/crop_disease.weights.h5")
-
-print("✅ Model loaded successfully")
 
 recommendations = {
 
@@ -111,13 +108,11 @@ recommendations = {
 
 }
 
-from werkzeug.security import (
-    generate_password_hash,
-    check_password_hash
-)
+
 from agno.agent import Agent
 from agno.models.groq import Groq
 from agno.db.sqlite import SqliteDb
+
 
 memory_db = SqliteDb(
     db_file="chat_memory.db"
@@ -142,48 +137,30 @@ farmer_agent = Agent(
     ]
 )
 app = Flask(__name__)
-print("Step 4: Flask app created")
 
+
+DATABASE = "raitha_bandava.db"
 
 def get_db_connection():
+    conn = sqlite3.connect(DATABASE)
+    conn.row_factory = sqlite3.Row
+    return conn
 
-conn = sqlite3.connect("raitha_bandava.db")
 
+def create_tables():
+    conn = get_db_connection()
+    cursor = conn.cursor()
 
-def test_database():
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS users(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT UNIQUE NOT NULL,
+        password TEXT NOT NULL
+    )
+    """)
 
-    connection = None
-    cursor = None
-
-    try:
-
-        connection = get_db_connection()
-
-        cursor = connection.cursor()
-
-        cursor.execute("SELECT DATABASE()")
-
-        database = cursor.fetchone()
-
-        
-        print("✅ MYSQL CONNECTED SUCCESSFULLY")
-        print("✅ DATABASE:", database[0])
-        
-
-    except mysql.connector.Error as error:
-
-        
-        print("❌ MYSQL CONNECTION ERROR")
-        print(error)
-        
-
-    finally:
-
-        if cursor:
-            cursor.close()
-
-        if connection and connection.is_connected():
-            connection.close()
+    conn.commit()
+    conn.close()
 
 def get_chat_session(username):
 
@@ -191,6 +168,8 @@ def get_chat_session(username):
         username = "guest"
 
     return f"user_{username}"
+
+
 
 @app.route("/")
 def home():
@@ -255,9 +234,6 @@ def register():
 
         password = data.get("password", "")
 
-
-        # CHECK EMPTY FIELDS
-
         if not name or not password:
 
             return jsonify({
@@ -279,18 +255,10 @@ def register():
         # DATABASE CONNECTION
 
         connection = get_db_connection()
-
-        cursor = connection.cursor(dictionary=True)
-
-
-        # CHECK EXISTING USER
+        cursor = connection.cursor()
 
         cursor.execute(
-            """
-            SELECT id
-            FROM users
-            WHERE name = %s
-            """,
+            "SELECT id FROM users WHERE name=?",
             (name,)
         )
 
@@ -308,104 +276,46 @@ def register():
 
         # HASH PASSWORD
 
-        hashed_password = generate_password_hash(
-            password
-        )
-
-
-        # INSERT USER
-
+        hashed_password = generate_password_hash(password)
         cursor.execute(
             """
-            INSERT INTO users
-            (
-                name,
-                password
-            )
-            VALUES
-            (
-                %s,
-                %s
-            )
+            INSERT INTO users(name,password)
+            VALUES(?,?)
             """,
             (
                 name,
                 hashed_password
             )
         )
-
-
         connection.commit()
 
 
         print(
-            f"✅ NEW USER REGISTERED: {name}"
+            f"NEW USER REGISTERED: {name}"
         )
 
 
         return jsonify({
-
             "success": True,
-
             "message":
                 "Registration Successful"
-
         }), 201
 
+    except Exception as e:
 
-    except mysql.connector.Error as error:
-
-        print(
-            "❌ REGISTER DATABASE ERROR:",
-            error
-        )
-
-
-        if connection:
-
-            connection.rollback()
-
+        print("REGISTER ERROR :", e)
 
         return jsonify({
-
             "success": False,
-
-            "message":
-                f"Database Error: {str(error)}"
-
+            "message": str(e)
         }), 500
-
-
-    except Exception as error:
-
-        print(
-            "❌ REGISTER ERROR:",
-            error
-        )
-
-
-        return jsonify({
-
-            "success": False,
-
-            "message":
-                "Registration Failed"
-
-        }), 500
-
 
     finally:
 
         if cursor:
-
             cursor.close()
 
-
-        if (
-            connection
-            and connection.is_connected()
-        ):
-
+        if connection:
             connection.close()
 
 
@@ -436,12 +346,12 @@ def login():
             }), 400
 
         connection = get_db_connection()
-        cursor = connection.cursor(dictionary=True)
+        cursor = connection.cursor()
 
         cursor.execute("""
             SELECT id, name, password
             FROM users
-            WHERE name=%s
+            WHERE name=?
         """, (name,))
 
         user = cursor.fetchone()
@@ -461,25 +371,21 @@ def login():
         print(f"✅ USER LOGGED IN : {user['name']}")
 
         return jsonify({
-
             "success": True,
-
             "message": "Login Successful",
-
             "user": {
                 "id": user["id"],
                 "name": user["name"]
             }
-
         }), 200
 
-    except mysql.connector.Error as error:
+    except Exception as e:
 
-        print(error)
+        print("LOGIN ERROR :", e)
 
         return jsonify({
             "success": False,
-            "message": str(error)
+            "message": str(e)
         }), 500
 
     finally:
@@ -487,16 +393,17 @@ def login():
         if cursor:
             cursor.close()
 
-        if connection and connection.is_connected():
+        if connection:
             connection.close()
+
 
 @app.route("/health")
 def health():
 
     try:
 
-        connection = get_db_connection()
-        connection.close()
+        conn = get_db_connection()
+        conn.close()
 
         return jsonify({
             "status": "OK",
@@ -525,8 +432,6 @@ def chat():
 
         question = data.get("message", "").strip()
         language = data.get("language", "en")
-
-        # Username received from frontend
         username = data.get("username", "guest")
 
         if not question:
@@ -655,12 +560,16 @@ def predict():
         }),500
            
 if __name__ == "__main__":
-    print("Step 5: Starting Flask...")
     
 
-    test_database()
+    create_tables()
+    print("✅ SQLite database ready.")
 
     app.run(
+        host="127.0.0.1",
+        port=5001,
+        debug=True
+    )
         host="127.0.0.1",
         port=5001,
         debug=True
