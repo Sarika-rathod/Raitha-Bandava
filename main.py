@@ -148,19 +148,21 @@ def get_db_connection():
 
 
 def create_tables():
-    conn = get_db_connection()
+    conn = sqlite3.connect("raitha_bandava.db")
     cursor = conn.cursor()
 
     cursor.execute("""
-    CREATE TABLE IF NOT EXISTS users(
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT UNIQUE NOT NULL,
-        password TEXT NOT NULL
-    )
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT UNIQUE NOT NULL,
+            password TEXT NOT NULL
+        )
     """)
 
     conn.commit()
     conn.close()
+    
+create_tables()
 
 def get_chat_session(username):
 
@@ -560,9 +562,6 @@ def predict():
         }),500
            
 if __name__ == "__main__":
-    create_tables()
-    print("✅ SQLite database ready.")
-
     app.run(
         host="127.0.0.1",
         port=5001,
