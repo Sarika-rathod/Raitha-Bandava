@@ -554,16 +554,16 @@ def predict():
 
         })
 
-except Exception as e:
-    import traceback
+    except Exception as e:
+        import traceback
 
-    print("========== PREDICTION ERROR ==========")
-    traceback.print_exc()
+        print("========== PREDICTION ERROR ==========")
+        traceback.print_exc()
 
-    return jsonify({
-        "success": False,
-        "error": str(e)
-    }), 500
+        return jsonify({
+           "success": False,
+           "error": str(e)
+        }), 500
 
 if __name__ == "__main__":
     app.run(
