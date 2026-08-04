@@ -1,17 +1,7 @@
-// ======================================================
-// GLOBAL CONFIG
-// ======================================================
-
-
 
 let currentLang = localStorage.getItem("language") || "en";
 let latestText = "";
 let micUsed = false;
-
-
-// ======================================================
-// TRANSLATIONS
-// ======================================================
 
 const translations = {
 
@@ -1233,7 +1223,7 @@ async function capture() {
 
 
             formData.append(
-                "file",
+                "image",
                 blob,
                 "crop.png"
             );
