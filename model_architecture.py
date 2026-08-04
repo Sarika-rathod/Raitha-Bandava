@@ -18,7 +18,7 @@ def create_model(num_classes):
     base_model = tf.keras.applications.EfficientNetB0(
         input_shape=(IMAGE_SIZE, IMAGE_SIZE, CHANNELS),
         include_top=False,
-        weights="None"
+        weights="imagenet"
     )
 
     base_model.trainable = False
