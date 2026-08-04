@@ -1281,15 +1281,13 @@ ${data.recommendation_en}`;
 document.getElementById("result").innerText = latestText;
 
 
-            const listenBtn =
-                document.getElementById("listenBtn");
-
-
+            const listenBtn = document.getElementById("listenBtn");
             if (listenBtn) {
-
-                listenBtn.style.display =
-                    "inline-block";
-
+                if (currentLang === "kn") {
+                     listenBtn.style.display = "inline-block";
+                } else {
+                    listenBtn.style.display = "none";
+                }
             }
 
 
@@ -1447,7 +1445,11 @@ ${data.recommendation_en}`;
 
         resultSection.style.display = "block";
 
-        listenBtn.style.display = "inline-block";
+        if (currentLang === "kn") {
+            listenBtn.style.display = "inline-block";
+        } else {
+            listenBtn.style.display = "none";
+        }
 
     }
     catch (error) {
