@@ -1241,14 +1241,10 @@ async function capture() {
             );
 
 
-            const response =
-                await fetch(
-                    `${API_URL}/predict`,
-                    {
-                        method: "POST",
-                        body: formData
-                    }
-                );
+           const response = await fetch("/predict", {
+               method: "POST",
+               body: formData
+           });
 
 
             if (!response.ok) {
