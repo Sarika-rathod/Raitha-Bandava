@@ -207,7 +207,12 @@ document.addEventListener("DOMContentLoaded", function () {
     initializeLoginSignup();
 
     loadLoggedInUser();
+    
+    const listenBtn = document.getElementById("listenBtn");
 
+    if (listenBtn) {
+        listenBtn.style.display = "none";
+    }
 
     const camera = document.getElementById("camera");
 
@@ -283,7 +288,7 @@ function initializeLanguageButton() {
         translateDropdowns(currentLang);
 
         translateDropdownOptions(currentLang);
-
+        
 
         console.log(
             "Language changed:",
