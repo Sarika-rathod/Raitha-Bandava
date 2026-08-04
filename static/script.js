@@ -288,7 +288,14 @@ function initializeLanguageButton() {
         translateDropdowns(currentLang);
 
         translateDropdownOptions(currentLang);
-        
+        const listenBtn = document.getElementById("listenBtn");
+
+        if (listenBtn) {
+            listenBtn.style.display =
+                currentLang === "kn" && latestText
+                    ? "inline-block"
+                    : "none";
+        }
 
         console.log(
             "Language changed:",
