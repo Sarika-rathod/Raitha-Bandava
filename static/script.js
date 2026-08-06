@@ -1138,7 +1138,8 @@ async function startCamera() {
 // ======================================================
 
 async function capture() {
-
+    console.log("Capture clicked");
+    
     const user =
         JSON.parse(
             localStorage.getItem("user")
