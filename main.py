@@ -533,6 +533,12 @@ def predict():
         index = np.argmax(prediction)
 
         confidence = float(np.max(prediction))
+        
+        if confidence < 0.90:
+            return jsonify({
+                "success": False,
+                "error": "No crop leaf detected. Please capture a clear image of a crop leaf."
+        }), 400
 
         disease = CLASS_NAMES[index]
 
