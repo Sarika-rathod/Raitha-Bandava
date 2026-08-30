@@ -1,16 +1,19 @@
-gradio
+Flask==3.0.3
+gunicorn==23.0.0
+
 tensorflow
 keras==3.12.4
+
 numpy==1.26.4
 Pillow==10.4.0
 opencv-python-headless==4.10.0.84
 
-groq
-agno
-
-requests==2.32.3
 python-dotenv==1.0.1
 
-ddgs>=9.0.0
+requests==2.32.3
 SQLAlchemy>=2.0.30
 aiosqlite
+agno
+ddgs>=9.0.0
+groq
+duckduckgo-search
