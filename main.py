@@ -13,6 +13,16 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from model_architecture import create_model
 
 load_dotenv()
+print("=" * 50)
+print("NEW_GROQ_API_KEY exists:", os.getenv("GROQ_API_KEY") is not None)
+
+key = os.getenv("NEW_GROQ_API_KEY")
+if key:
+    print("Key starts with:", key[:8])
+    print("Key length:", len(key))
+else:
+    print("No API key found")
+print("=" * 50)
 
 CLASS_NAMES = [
     "Maize_Common_Rust",
@@ -29,8 +39,12 @@ CLASS_NAMES = [
     "Wheat_Septoria"
 ]
 
+print("Loading disease model...")
+
 model = create_model(len(CLASS_NAMES))
 model.load_weights("training/crop_disease.weights.h5")
+
+print("Disease model loaded.")
 
 recommendations = {
 
@@ -528,7 +542,19 @@ def predict():
         img = tf.keras.applications.efficientnet.preprocess_input(img)
 
         # Prediction
-        prediction = model.predict(img, verbose=0)
+        import time
+
+        print("=" * 60)
+        print("START PREDICTION")
+
+        start = time.time()
+
+        prediction = model(img, training=False)
+
+        print("END PREDICTION")
+        print("TIME:", time.time() - start)
+
+        prediction = prediction.numpy()
 
         index = np.argmax(prediction)
 

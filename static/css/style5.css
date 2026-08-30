@@ -25,7 +25,12 @@ body{
     align-items: center;
     gap:10px; 
     height: 80px;
+    top:10px;
+    left:10px;
+    right: 10px;
+    width:100%;
     text-align: center;
+    position:static;
 }
 .section img{
     width: 50px;
@@ -81,11 +86,11 @@ body{
     transform: translateX(-50%);
     width: 90%;
     max-width: 900px;
-
+    padding: 12px;
     display: flex;
     align-items: center;
     gap: 10px;
-
+   
     z-index: 1000;
 }
 
@@ -93,6 +98,7 @@ body{
     height: 70vh;          /* or any height you prefer */
     overflow-y: auto;
     display: flex;
+    flex: 1;
     flex-direction: column;
     gap: 15px;
     padding: 15px;
@@ -165,7 +171,7 @@ img{
     padding:12px;
     font-size: 16px;
     outline: none;
-    margin-bottom: 10px;
+    
 }
 #userInput:focus{
     border-color:#4CAF50
