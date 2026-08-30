@@ -134,7 +134,7 @@ memory_db = SqliteDb(
 
 farmer_agent = Agent(
     model=Groq(
-        id="llama-3.1-8b-instant",
+        id="openai/gpt-oss-120b",
         api_key=os.getenv("GROQ_API_KEY"),
         
     ),
