@@ -11,6 +11,8 @@ import sqlite3
 import json
 import numpy as np
 import tensorflow as tf
+from tensorflow.keras.models import load_model
+model = load_model("model.h5")
 
 tf.config.threading.set_intra_op_parallelism_threads(1)
 tf.config.threading.set_inter_op_parallelism_threads(1)
@@ -24,9 +26,9 @@ from model_architecture import create_model
 
 load_dotenv()
 print("=" * 50)
-print("NEW_GROQ_API_KEY exists:", os.getenv("GROQ_API_KEY") is not None)
+print("GROQ_API_KEY exists:", os.getenv("GROQ_API_KEY") is not None)
 
-key = os.getenv("NEW_GROQ_API_KEY")
+key = os.getenv("GROQ_API_KEY")
 if key:
     print("Key starts with:", key[:8])
     print("Key length:", len(key))
@@ -529,10 +531,10 @@ def predict():
 
     try:
 
-        if "image" not in request.files:
-            return jsonify({"error":"No image uploaded"}),400
+        if "file" not in request.files:
+            return jsonify({"error": "No image uploaded"}), 400
 
-        file = request.files["image"]
+        file = request.files["file"]
 
         if file.filename == "":
             return jsonify({"error":"No file selected"}),400
