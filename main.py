@@ -11,8 +11,7 @@ import sqlite3
 import json
 import numpy as np
 import tensorflow as tf
-from tensorflow.keras.models import load_model
-model = load_model("model.h5")
+
 
 tf.config.threading.set_intra_op_parallelism_threads(1)
 tf.config.threading.set_inter_op_parallelism_threads(1)
@@ -531,77 +530,50 @@ def predict():
 
     try:
 
-        if "file" not in request.files:
-            return jsonify({"error": "No image uploaded"}), 400
+        if "image" not in request.files:
+            return jsonify({
+                "success": False,
+                "error": "No image uploaded"
+            }), 400
 
-        file = request.files["file"]
+        file = request.files["image"]
 
         if file.filename == "":
-            return jsonify({"error":"No file selected"}),400
+            return jsonify({
+                "success": False,
+                "error": "No file selected"
+            }), 400
 
-        # Read image
         img = Image.open(file).convert("RGB")
-
-        # Resize
         img = img.resize((256,256))
-
-        # Convert to array
         img = img_to_array(img)
-
         img = np.expand_dims(img, axis=0)
 
-        # EfficientNet preprocessing
         img = tf.keras.applications.efficientnet.preprocess_input(img)
 
-        # Prediction
-        import time
-
-        print("=" * 60)
-        print("START PREDICTION")
-
-        start = time.time()
-
-        prediction = model.predict(
-            img,
-            verbose=0
-        )
-
-        print("END PREDICTION")
-        print("TIME:", time.time() - start)
+        prediction = model.predict(img, verbose=0)
 
         index = np.argmax(prediction)
-
         confidence = float(np.max(prediction))
 
         disease = CLASS_NAMES[index]
-
         rec = recommendations[disease]
 
         return jsonify({
-
-            "success":True,
-
-            "disease":disease,
-
-            "disease_kn":rec["kn"],
-
-            "confidence":round(confidence*100,2),
-
-            "recommendation_en":rec["en"],
-
-            "recommendation_kn":rec["kn_rec"]
-
+            "success": True,
+            "disease": disease,
+            "disease_kn": rec["kn"],
+            "confidence": round(confidence * 100, 2),
+            "recommendation_en": rec["en"],
+            "recommendation_kn": rec["kn_rec"]
         })
 
     except Exception as e:
-        import traceback
-
-        print("========== PREDICTION ERROR ==========")
-        traceback.print_exc()
+        print("PREDICTION ERROR:", e)
 
         return jsonify({
-           "success": False,
-           "error": str(e)
+            "success": False,
+            "error": str(e)
         }), 500
 
 if __name__ == "__main__":
