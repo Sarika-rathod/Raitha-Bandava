@@ -1,9 +1,19 @@
 from flask import Flask, render_template, request, jsonify
 import os
+
+# Reduce TensorFlow memory/CPU usage on Render
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
+os.environ["OMP_NUM_THREADS"] = "1"
+os.environ["TF_NUM_INTRAOP_THREADS"] = "1"
+os.environ["TF_NUM_INTEROP_THREADS"] = "1"
+
 import sqlite3
 import json
 import numpy as np
 import tensorflow as tf
+
+tf.config.threading.set_intra_op_parallelism_threads(1)
+tf.config.threading.set_inter_op_parallelism_threads(1)
 
 from PIL import Image
 from dotenv import load_dotenv
@@ -549,12 +559,13 @@ def predict():
 
         start = time.time()
 
-        prediction = model(img, training=False)
+        prediction = model.predict(
+            img,
+            verbose=0
+        )
 
         print("END PREDICTION")
         print("TIME:", time.time() - start)
-
-        prediction = prediction.numpy()
 
         index = np.argmax(prediction)
 
