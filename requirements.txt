@@ -2,8 +2,7 @@ Flask==3.0.3
 gunicorn==23.0.0
 
 tensorflow==2.15.0
-
-
+keras==2.15.0
 numpy==1.26.4
 Pillow==10.4.0
 opencv-python-headless==4.10.0.84
@@ -17,3 +16,4 @@ agno
 ddgs>=9.0.0
 groq
 duckduckgo-search
+
