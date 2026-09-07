@@ -8,12 +8,12 @@ Pillow==10.4.0
 opencv-python-headless==4.10.0.84
 
 python-dotenv==1.0.1
-
 requests==2.32.3
+
 SQLAlchemy>=2.0.30
 aiosqlite
+
 agno
 ddgs>=9.0.0
 groq
 duckduckgo-search
-
