@@ -1338,7 +1338,7 @@ async function savePrediction(user, data) {
     try {
 
         await fetch(
-            `${API_URL}/save_prediction`,
+            `/save_prediction`,
             {
                 method: "POST",
 
@@ -1353,11 +1353,9 @@ async function savePrediction(user, data) {
 
                     disease: data.disease,
 
-                    confidence:
-                        data.confidence,
+                    confidence:data.confidence,
 
-                    image_name:
-                        "captured-image"
+                    image_name:"captured-image"
 
                 })
             }
@@ -1376,15 +1374,29 @@ async function savePrediction(user, data) {
 }
 async function predictUploadedImage() {
 
+    console.log("Upload image selected");
+
     const input = document.getElementById("imageInput");
+
+    if (!input) {
+        console.error("imageInput not found");
+        return;
+    }
+
     const file = input.files[0];
 
     if (!file) {
-        alert(currentLang === "kn"
-            ? "ಚಿತ್ರವನ್ನು ಆಯ್ಕೆಮಾಡಿ"
-            : "Please select an image.");
+        alert(
+            currentLang === "kn"
+                ? "ಚಿತ್ರವನ್ನು ಆಯ್ಕೆಮಾಡಿ"
+                : "Please select an image."
+        );
         return;
     }
+
+    console.log("Selected file:", file.name);
+    console.log("File type:", file.type);
+    console.log("File size:", file.size);
 
     const preview = document.getElementById("previewImage");
     const camera = document.getElementById("camera");
@@ -1392,16 +1404,26 @@ async function predictUploadedImage() {
     const resultSection = document.getElementById("resultSection");
     const listenBtn = document.getElementById("listenBtn");
 
+    if (!preview || !result || !resultSection) {
+        console.error("Disease detector elements not found");
+        return;
+    }
+
     // Show uploaded image
     preview.src = URL.createObjectURL(file);
     preview.style.display = "block";
 
     // Hide camera
-    camera.style.display = "none";
+    if (camera) {
+        camera.style.display = "none";
+    }
 
-    // Hide previous prediction
-    resultSection.style.display = "none";
-    listenBtn.style.display = "none";
+    // Show result section
+    resultSection.style.display = "block";
+
+    if (listenBtn) {
+        listenBtn.style.display = "none";
+    }
 
     result.innerText =
         currentLang === "kn"
@@ -1409,7 +1431,12 @@ async function predictUploadedImage() {
             : "⏳ Detecting disease...";
 
     const formData = new FormData();
+
+    // IMPORTANT:
+    // Flask expects request.files["image"]
     formData.append("image", file);
+
+    console.log("Sending image to /predict...");
 
     try {
 
@@ -1418,13 +1445,18 @@ async function predictUploadedImage() {
             body: formData
         });
 
-        if (!response.ok) {
-            throw new Error("Prediction failed");
-        }
+        console.log("Prediction response status:", response.status);
 
         const data = await response.json();
 
-        console.log(data);
+        console.log("Prediction response:", data);
+
+        if (!response.ok || !data.success) {
+
+            throw new Error(
+                data.error || "Prediction failed"
+            );
+        }
 
         if (currentLang === "kn") {
 
@@ -1452,20 +1484,24 @@ ${data.recommendation_en}`;
 
         result.innerText = latestText;
 
-        resultSection.style.display = "block";
+        if (listenBtn) {
 
-        if (currentLang === "kn") {
-            listenBtn.style.display = "inline-block";
-        } else {
-            listenBtn.style.display = "none";
+            if (currentLang === "kn") {
+                listenBtn.style.display = "inline-block";
+            } else {
+                listenBtn.style.display = "none";
+            }
+
         }
 
-    }
-    catch (error) {
+        console.log("Prediction displayed successfully.");
 
-        console.error("Prediction Error:", error);
+    } catch (error) {
 
-        resultSection.style.display = "block";
+        console.error(
+            "Prediction Error:",
+            error
+        );
 
         result.innerText =
             currentLang === "kn"
@@ -1474,7 +1510,6 @@ ${data.recommendation_en}`;
 
     }
 }
-
 // ======================================================
 // SPEAK RESULT
 // ======================================================
