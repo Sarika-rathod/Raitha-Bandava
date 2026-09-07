@@ -551,7 +551,7 @@ def predict():
 
         img = tf.keras.applications.efficientnet.preprocess_input(img)
 
-        prediction = model.predict(img, verbose=0)
+        prediction = model(img, training=False).numpy()
 
         index = np.argmax(prediction)
         confidence = float(np.max(prediction))
